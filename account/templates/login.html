@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+        <!-- Top bar Start -->
+        
+        <!-- Nav Bar End -->      
+        
+        <!-- Bottom Bar Start -->
+{% block content %}
+        
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">    
+                        <form action="{% url 'account:login-register' %}" method="POST" class="register-form">
+                            <div class="row">
+                            {% csrf_token %}
+                            {% for field in form  %}
+                                <div class="col-md-6">
+                                   {{ field }}
+                                   {{field.help_text}}
+                                   {% for error in field.errors  %}
+                                   <li class="text-danger">{{error}}</li>
+                                   {% endfor %}
+                                </div>
+                            {% endfor %}
+
+                                <div class="col-md-12">
+                                    <button class="btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6">
+                        <form action="{% url 'account:login' %}" method="POST" class="login-form">
+                            <div class="row">
+                             {% csrf_token %}
+                            {% for field in forms  %}
+                                <div class="col-md-6">
+                                   {{ field }}
+                                   {{field.help_text}}
+                                   {% for error in field.errors  %}
+                                   <li class="text-danger">{{error}}</li>
+                                   {% endfor %}
+                                </div>
+                            {% endfor %}
+                                
+                                <div class="col-md-12">
+                                    <button class="btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        
+        <!-- Footer Start -->
+       
+        
+        <!-- JavaScript Libraries -->
+       
+{% endblock %}

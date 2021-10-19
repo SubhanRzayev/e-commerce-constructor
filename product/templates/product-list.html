@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+        
+        <!-- Nav Bar End -->      
+        
+        <!-- Bottom Bar Start -->
+        
+        <!-- Bottom Bar End -->  
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'core:index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'product:product_list' %}">Products</a></li>
+                    <li class="breadcrumb-item active">Product List</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Product List Start -->
+        <div class="product-view">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="product-view-top">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <form action="{% url 'core:search' %}" class="product-search">
+                                                <input name="search" id='search' type="text">
+                                                <button type="submit"><i class="fa fa-search"></i></button>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="product-short">
+                                                <div class="dropdown">
+                                                    <div class="dropdown-toggle" data-toggle="dropdown">Product short by</div>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                    {% for t in categories_list  %}
+                                                    {% if t.is_published %}
+
+                                                        <a href="/product-list?category={{t.id}}" class="dropdown-item">{{t.title}}</a>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="product-price-range">
+                                                <div class="dropdown">
+                                                    <div class="dropdown-toggle" data-toggle="dropdown">Product price range</div>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                    {% for product in product_list %}
+                                                    {% if product.is_published %}
+                                                    {% for price in product.prices.all %}
+                                                        <a href="product-list/?price={{product.id}}" class="dropdown-item">{{price.price}}</a>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for product in product_list %}
+                            {% if product.is_published %}
+                            <div class="col-md-4">
+                                <div class="product-item">
+                                    <div class="product-title">
+                                        <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="{{product.products_image.url}}" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                            <a href="#"><i class="fa fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-price">
+                                        <h3><span>$</span>{{product.price}}</h3>
+                                        <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            
+                            
+                        </div>
+                        
+                        <!-- Pagination Start -->
+                        
+                        <div class="col-md-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="/product-list/?page={{page_obj.previous_page_number}}" tabindex="-1">Previous</a>
+                                    </li>
+                                {% endif %}
+                                {% for page in page_obj.paginator.page_range %}
+                                {% if page == page_obj.number %}   
+                                    <li class="page-item active" aria-current = 'page'><a class="page-link" href="/product-list/?page={{page}}" span class="visually-hidden">{{page}}</span></a></li>
+                                {% else %}
+                                    <li><a class="page-link" href="/product-list/?page={{page}}">{{page}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                    {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" tabindex="-1" href="/product-list/?page={{page_obj.next_page_number}}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                        
+                        <!-- Pagination Start -->
+                    </div>           
+                    
+                    <!-- Side Bar Start -->
+                    <div class="col-lg-4 sidebar">
+                        <div class="sidebar-widget category">
+                            <h2 class="title">Category</h2>
+                            <nav class="navbar bg-light">
+                                <ul class="navbar-nav">
+                                {% for t in category  %}
+                                {% if t.is_published %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/product-list?category={{t.id}}"><i class="{{t.icon}}"></i>{{t.title}}</a>
+                                    </li>   
+                                {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
+                        
+                        <div class="sidebar-widget widget-slider">
+                            <div class="sidebar-slider normal-slider">
+                            {% for product in product_list  %}
+                            {% if product.is_published %}
+                                <div class="product-item">
+                                    <div class="product-title">
+                                        <a href="{{product.get_absolute_url}}">{{product.title}}</a>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <div class="product-image">
+                                        <a href="{{product.get_absolute_url}}">
+                                            <img src="{{product.products_image.url}}" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                            <a href="#"><i class="fa fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-price">
+                                        <h3><span>$</span>{{product.price}}</h3>
+                                        <a class="btn" href=""><i class="fa fa-shopping-cart"></i>Buy Now</a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% endfor %}                                
+                            </div>
+                        </div>
+                        
+                        <div class="sidebar-widget brands">
+                            <h2 class="title">Our Brands</h2>
+                            <ul>
+                                <li><a href="#">Nulla </a><span>(45)</span></li>
+                                <li><a href="#">Curabitur </a><span>(34)</span></li>
+                                <li><a href="#">Nunc </a><span>(67)</span></li>
+                                <li><a href="#">Ullamcorper</a><span>(74)</span></li>
+                                <li><a href="#">Fusce </a><span>(89)</span></li>
+                                <li><a href="#">Sagittis</a><span>(28)</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="sidebar-widget tag">
+                            <h2 class="title">Tags Cloud</h2>
+                            <a href="#">Lorem ipsum</a>
+                            <a href="#">Vivamus</a>
+                            <a href="#">Phasellus</a>
+                            <a href="#">pulvinar</a>
+                            <a href="#">Curabitur</a>
+                            <a href="#">Fusce</a>
+                            <a href="#">Sem quis</a>
+                            <a href="#">Mollis metus</a>
+                            <a href="#">Sit amet</a>
+                            <a href="#">Vel posuere</a>
+                            <a href="#">orci luctus</a>
+                            <a href="#">Nam lorem</a>
+                        </div>
+                    </div>
+                    <!-- Side Bar End -->
+                </div>
+            </div>
+        </div>
+        <!-- Product List End -->  
+        
+        <!-- Brand Start -->
+
+        <div class="brand">
+            <div class="container-fluid">
+                <div class="brand-slider">
+                {% for brand in brand_list %}
+                    <div class="brand-item"><img src="{{brand.image.url}}" alt=""></div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Brand End -->
+        
+        <!-- Footer Start -->
+  
+{% endblock %}
+      
